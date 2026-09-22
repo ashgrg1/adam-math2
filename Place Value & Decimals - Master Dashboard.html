@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 Master Dashboard — Place Value &amp; Decimals · 5th Grade Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fff6ea; --paper-2:#ffeccb; --ink:#3a2c1f; --ink-soft:#7a6a58;
+    --line:#e7d3b1; --card:#fffdf8;
+    --A:#8b5cf6; --B:#2f6bff; --C:#12a58a; --D:#ff9e2c; --E:#f0509e; --F:#2fae66;
+    --good:#12a58a; --bad:#e05555;
+    --shadow:0 10px 0 rgba(58,44,31,.10), 0 18px 34px rgba(58,44,31,.16);
+    --shadow-sm:0 6px 0 rgba(58,44,31,.08), 0 10px 20px rgba(58,44,31,.12);
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{
+    font-family:"Nunito",system-ui,-apple-system,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, #ffe9c2 0, rgba(255,233,194,0) 42%),
+      radial-gradient(circle at 88% 4%, #d9f3ec 0, rgba(217,243,236,0) 40%),
+      radial-gradient(circle at 50% 120%, #ffe0ef 0, rgba(255,224,239,0) 55%),
+      var(--paper);
+    min-height:100vh;-webkit-tap-highlight-color:transparent;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(rgba(58,44,31,.05) 1.4px, transparent 1.4px);background-size:26px 26px;}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:22px 18px 80px}
+  h1,h2,h3,.display{font-family:"Fredoka","Nunito",sans-serif;font-weight:700;line-height:1.05}
+
+  .topbar{text-align:center;margin:8px 0 6px}
+  .kicker{display:inline-block;font-family:"Fredoka";font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    font-size:.72rem;color:var(--ink-soft);background:#fff;border:2px solid var(--line);border-radius:999px;
+    padding:5px 14px;box-shadow:var(--shadow-sm)}
+  h1{font-size:clamp(2rem,6vw,3.2rem);margin:12px 0 4px;
+    background:linear-gradient(90deg,var(--A),var(--B),var(--C),var(--D),var(--E),var(--F));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .subtitle{color:var(--ink-soft);font-weight:700;margin:0 auto;max-width:640px;font-size:1.02rem}
+  .modmeta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .chip{font-family:"Fredoka";font-weight:600;font-size:.78rem;background:#fff;border:2px solid var(--line);
+    border-radius:999px;padding:5px 12px;color:var(--ink-soft);box-shadow:var(--shadow-sm)}
+
+  /* DASHBOARD */
+  .dash{margin:20px auto 8px;background:var(--card);border:3px solid var(--ink);border-radius:26px;
+    box-shadow:var(--shadow);padding:16px 16px 14px}
+  .dash-head{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+  .dash-title{font-family:"Fredoka";font-size:1.15rem;display:flex;align-items:center;gap:8px}
+  .stamp-count{font-family:"Fredoka";font-weight:600;background:var(--paper-2);border:2px solid var(--ink);
+    border-radius:999px;padding:6px 14px;font-size:1rem;display:flex;align-items:center;gap:8px}
+  .stamp-count b{font-size:1.15rem}
+  .dash-top{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:12px}
+  .ovring{position:relative;width:104px;height:104px;flex:none;margin:0 auto}
+  .ovring svg{width:104px;height:104px;transform:rotate(-90deg)}
+  .ovring .t{fill:none;stroke:#eadfce;stroke-width:9}
+  .ovring .p{fill:none;stroke:url(#grad);stroke-width:9;stroke-linecap:round;
+    stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset .7s cubic-bezier(.2,.9,.3,1.2)}
+  .ovring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ovring .num b{font-family:"Fredoka";font-weight:700;font-size:1.5rem;line-height:1}
+  .ovring .num span{font-size:.62rem;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em}
+  .readout{font-weight:800;font-size:1rem;line-height:1.5;color:#4a3a2b}
+  .readout b{color:var(--E)}
+  .rings{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .ring{background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:10px 6px 8px;text-align:center;
+    cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+  .ring:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+  .ring:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+  .ring svg{width:52px;height:52px;display:block;margin:0 auto}
+  .ring .rlabel{font-family:"Fredoka";font-weight:600;font-size:.68rem;margin-top:4px;line-height:1.05}
+  .ring .rpct{font-family:"Fredoka";font-weight:700;font-size:.7rem;color:var(--ink-soft)}
+  .track{fill:none;stroke:#eadfce;stroke-width:7}
+  .prog{fill:none;stroke-width:7;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;
+    stroke-dasharray:126;stroke-dashoffset:126;transition:stroke-dashoffset .6s cubic-bezier(.2,.9,.3,1.2)}
+  .dash-note{text-align:center;color:var(--ink-soft);font-weight:700;font-size:.82rem;margin:12px 2px 2px}
+
+  .grid{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .guide{position:relative;background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:14px 12px 14px;
+    text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:transform .18s ease, box-shadow .18s ease;--c:var(--A)}
+  .guide::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;border-radius:20px 20px 0 0;background:var(--c);opacity:.9}
+  .guide:hover{transform:translateY(-6px)}
+  .guide:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  .guide .char{width:96px;height:96px;display:block;margin:8px auto 2px}
+  .float{animation:bob 3.4s ease-in-out infinite}
+  .guide:nth-child(2) .float{animation-delay:-.5s} .guide:nth-child(3) .float{animation-delay:-1s}
+  .guide:nth-child(4) .float{animation-delay:-1.6s} .guide:nth-child(5) .float{animation-delay:-2.1s}
+  .guide:nth-child(6) .float{animation-delay:-2.7s}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
+  .guide:hover .float{animation:wave .6s ease}
+  @keyframes wave{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-4px) rotate(-6deg)}75%{transform:translateY(-4px) rotate(6deg)}}
+  .eye{transform-origin:center;animation:blink 5s infinite}
+  .guide:nth-child(2) .eye{animation-delay:-1.3s} .guide:nth-child(3) .eye{animation-delay:-2.4s}
+  .guide:nth-child(4) .eye{animation-delay:-3.1s} .guide:nth-child(5) .eye{animation-delay:-4s}
+  .guide:nth-child(6) .eye{animation-delay:-2.7s}
+  @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+  .chaptag{font-family:"Fredoka";font-weight:700;font-size:.66rem;color:#fff;background:var(--c);border:2px solid var(--ink);
+    border-radius:999px;padding:2px 10px;display:inline-block;box-shadow:0 3px 0 rgba(58,44,31,.18)}
+  .gname{font-family:"Fredoka";font-weight:600;font-size:.96rem;margin-top:8px;color:var(--c)}
+  .grole{font-family:"Fredoka";font-weight:600;font-size:.72rem;color:var(--ink-soft);letter-spacing:.02em;text-transform:uppercase;line-height:1.2;min-height:2.2em;margin-top:2px}
+  .gteks{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:7px}
+  .teks{font-family:"Fredoka";font-weight:600;font-size:.6rem;background:var(--paper-2);border:1.5px solid var(--line);
+    border-radius:999px;padding:2px 7px;color:var(--ink-soft)}
+  .gmeta{font-weight:800;font-size:.74rem;margin-top:8px;color:var(--ink-soft)}
+  .gcta{display:inline-block;margin-top:7px;font-family:"Fredoka";font-weight:600;font-size:.8rem;color:var(--c)}
+  .mastered-badge{position:absolute;top:-10px;right:-8px;background:#ffd34d;border:2.5px solid var(--ink);border-radius:999px;
+    font-family:"Fredoka";font-weight:700;font-size:.64rem;padding:3px 8px;transform:rotate(8deg);box-shadow:var(--shadow-sm);display:none}
+  .guide.done .mastered-badge{display:block;animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(0) rotate(8deg)}70%{transform:scale(1.25) rotate(8deg)}100%{transform:scale(1) rotate(8deg)}}
+  .guide.done{animation:cheer .7s ease}
+  @keyframes cheer{0%,100%{}30%{transform:translateY(-14px) scale(1.05)}55%{transform:translateY(0) scale(1)}75%{transform:translateY(-6px)}}
+  .here-flag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--E);color:#fff;
+    font-family:"Fredoka";font-weight:700;font-size:.62rem;padding:3px 10px;border:2px solid var(--ink);border-radius:999px;
+    white-space:nowrap;box-shadow:var(--shadow-sm);z-index:2;animation:bobf 3s ease-in-out infinite}
+  @keyframes bobf{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px)}}
+
+  /* QUIZ MODAL */
+  .quiz-overlay{position:fixed;inset:0;z-index:60;background:rgba(58,44,31,.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;padding:16px}
+  .quiz-overlay.open{display:flex;animation:fadein .2s ease}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .quiz-modal{background:var(--card);border:3px solid var(--ink);border-radius:26px;max-width:580px;width:100%;
+    max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);--c:var(--A);
+    position:relative;animation:pops .3s cubic-bezier(.2,.9,.3,1.15)}
+  @keyframes pops{from{transform:scale(.9) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+  .quiz-head{background:var(--c);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .quiz-head svg{width:60px;height:60px;flex:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.15))}
+  .qh-txt{flex:1;min-width:0}
+  .qh-eyebrow{font-family:"Fredoka";font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;opacity:.95}
+  .qh-title{font-family:"Fredoka";font-weight:700;font-size:1.15rem;margin-top:2px}
+  .quiz-x{background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:999px;width:36px;height:36px;
+    font-size:1rem;cursor:pointer;font-family:"Fredoka";flex:none;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+  .quiz-x:active{transform:translateY(3px);box-shadow:none}
+  .quiz-body{padding:16px 20px 8px;overflow-y:auto}
+  .lesson{background:var(--paper-2);border:2px dashed var(--c);border-radius:16px;padding:12px 14px;font-weight:700;
+    font-size:.95rem;line-height:1.5;margin-bottom:14px;color:#4a3a2b}
+  .lesson b{color:var(--c)}
+  .qdots{display:flex;gap:6px;justify-content:center;margin:2px 0 14px;flex-wrap:wrap}
+  .qdot{width:12px;height:12px;border-radius:50%;background:#eadfce;border:2px solid var(--line)}
+  .qdot.got{background:var(--c);border-color:var(--c)}
+  .qdot.now{transform:scale(1.3);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+  .question{font-family:"Fredoka";font-weight:600;font-size:1.28rem;line-height:1.35;text-align:center;
+    margin:4px 0 16px;color:var(--ink)}
+  .question b{color:var(--c)}
+  .choices{display:grid;gap:10px}
+  .choice{font-family:"Nunito";font-weight:800;font-size:1.05rem;text-align:left;background:var(--paper);
+    border:2.5px solid var(--ink);border-radius:16px;padding:14px 16px;cursor:pointer;color:var(--ink);
+    box-shadow:0 5px 0 rgba(58,44,31,.12);transition:transform .1s ease}
+  .choice:hover:not(:disabled){transform:translateY(-2px)}
+  .choice:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 rgba(58,44,31,.12)}
+  .choice:disabled{cursor:default}
+  .choice.correct{background:#d8f5e6;border-color:var(--good);color:#0c6b58;box-shadow:0 5px 0 rgba(18,165,138,.3)}
+  .choice.wrong{background:#ffe0e0;border-color:var(--bad);color:#a12b2b;box-shadow:none;animation:shake .35s;opacity:.85}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+  .feedback{margin:14px 0 4px;border-radius:16px;padding:12px 14px;font-weight:700;font-size:.95rem;line-height:1.5}
+  .feedback.correct{background:#e7f9f0;border:2px solid var(--good);color:#0c6b58}
+  .feedback.wrong{background:#fdeeee;border:2px solid var(--bad);color:#a12b2b}
+  .quiz-foot{padding:12px 20px 16px;border-top:2px solid var(--line);display:flex;gap:10px;min-height:8px}
+  .quiz-foot:empty{padding:0;border:none}
+  .next-btn{flex:1;font-family:"Fredoka";font-weight:600;font-size:1.05rem;color:#fff;background:var(--c);
+    border:2.5px solid var(--ink);border-radius:16px;padding:13px;cursor:pointer;box-shadow:0 5px 0 rgba(58,44,31,.25)}
+  .next-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(58,44,31,.25)}
+  .next-btn.ghost{background:#fff;color:var(--ink)}
+  .summary{text-align:center;padding:12px 4px 6px}
+  .sum-emoji{font-size:3rem;line-height:1}
+  .summary h2{font-size:1.55rem;margin:8px 0 8px;color:var(--c)}
+  .summary p{font-weight:700;color:#4a3a2b;font-size:1rem;margin:0 0 12px;line-height:1.5}
+  .sum-stars{font-size:1.5rem;letter-spacing:3px;line-height:1.3}
+
+  .confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:70;overflow:hidden}
+  .confetti i{position:absolute;width:10px;height:14px;top:-20px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+
+  footer{text-align:center;color:var(--ink-soft);font-weight:700;margin-top:34px;font-size:.85rem;line-height:1.6}
+  .booknote{font-size:.78rem;color:var(--ink-soft);margin-top:6px}
+  .reset{margin-top:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:8px 16px;
+    font-family:"Fredoka";font-weight:600;cursor:pointer;color:var(--ink);box-shadow:var(--shadow-sm)}
+  .reset:hover{background:var(--paper-2)}
+
+  @media (max-width:820px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .rings{grid-template-columns:repeat(3,1fr);gap:6px}
+    .dash-top{grid-template-columns:1fr;justify-items:center;text-align:center}
+  }
+  @media (max-width:560px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .rings{grid-template-columns:repeat(2,1fr)}
+    .qh-title{font-size:1rem}.question{font-size:1.15rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span class="kicker">Mineral Wells ISD · 5th Grade Math · Module 1</span>
+    <h1>Place Value &amp; Decimals — Master Dashboard</h1>
+    <p class="subtitle">The whole module, one chapter at a time. Each animal guide teaches a chapter in plain words, then quizzes Adam with friendly questions. Tap a guide, read the tip, and earn stars! 🌟</p>
+    <div class="modmeta">
+      <span class="chip">📚 6 chapters (A–F)</span>
+      <span class="chip">❓ 24 questions</span>
+      <span class="chip">✅ Aligned to Texas TEKS</span>
+      <span class="chip">📍 Adam is on Chapter E</span>
+    </div>
+  </div>
+
+  <section class="dash" aria-label="Progress dashboard">
+    <div class="dash-head">
+      <div class="dash-title">🧭 Adam's Learning Journey</div>
+      <div class="stamp-count">⭐ <span><b id="totalGot">0</b> / <span id="totalAll">24</span> stars</span></div>
+    </div>
+    <div class="dash-top">
+      <div class="ovring">
+        <svg viewBox="0 0 100 100">
+          <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8b5cf6"/><stop offset=".5" stop-color="#f0509e"/><stop offset="1" stop-color="#2fae66"/>
+          </linearGradient></defs>
+          <circle class="t" cx="50" cy="50" r="45"/>
+          <circle class="p" id="ovProg" cx="50" cy="50" r="45"/>
+        </svg>
+        <div class="num"><b id="ovNum">0</b><span>of 24</span></div>
+      </div>
+      <div class="readout" id="readout"></div>
+    </div>
+    <div class="rings" id="rings"></div>
+    <p class="dash-note">Each ring is one chapter. It fills up as Adam answers correctly — a full ring means that chapter is mastered! 🎉</p>
+  </section>
+
+  <section class="grid" id="grid" aria-label="Choose a chapter guide"></section>
+
+  <footer>
+    Fill all six rings to become a <b>Place Value &amp; Decimals Master!</b> 🏆
+    <br><button class="reset" id="reset">↺ Start over</button>
+    <div class="booknote">Book: <b>Bluebonnet Learning K–5 Math</b> · Grade 5, Module 1: Place Value and Decimals · Edition 1 (Texas Education Agency). Chapters follow the module's 6 topics (A–F) and 15 lessons. Aligned to Texas TEKS.</div>
+  </footer>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="quiz-overlay" id="quizOverlay" aria-hidden="true">
+  <div class="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="qhTitle">
+    <div class="quiz-head" id="quizHead"></div>
+    <div class="quiz-body" id="quizBody"></div>
+    <div class="quiz-foot" id="quizFoot"></div>
+  </div>
+</div>
+
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script>
+/* ---------- SVG CHARACTERS ---------- */
+function owl(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="24" ry="5" fill="rgba(0,0,0,.08)"/>
+  <path d="M38 34c-4-12-2-20 2-19s7 9 6 18z" fill="${c}"/>
+  <path d="M82 34c4-12 2-20-2-19s-7 9-6 18z" fill="${c}"/>
+  <path d="M60 28c18 0 30 14 30 34 0 24-13 40-30 40S30 86 30 62c0-20 12-34 30-34z" fill="${c}"/>
+  <path d="M31 60c0-7 5-12 11-12 4 0 7 2 8 6-6 4-12 5-19 6z" fill="rgba(255,255,255,.2)"/>
+  <path d="M89 60c0-7-5-12-11-12-4 0-7 2-8 6 6 4 12 5 19 6z" fill="rgba(255,255,255,.2)"/>
+  <circle cx="49" cy="56" r="14" fill="#fff7ea"/><circle cx="71" cy="56" r="14" fill="#fff7ea"/>
+  <circle class="eye" cx="49" cy="56" r="7" fill="#2c2016"/><circle class="eye" cx="71" cy="56" r="7" fill="#2c2016"/>
+  <circle cx="46.5" cy="53.5" r="2.2" fill="#fff"/><circle cx="68.5" cy="53.5" r="2.2" fill="#fff"/>
+  <path d="M56 64h8l-4 7z" fill="#ff9e2c"/>
+  <path d="M46 84c4 4 9 5 14 5s10-1 14-5" stroke="#7a5a3a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".35"/>
+</g></svg>`}
+function dolphin(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="26" ry="5" fill="rgba(0,0,0,.08)"/>
+  <path d="M60 20c8 2 12 10 10 20-6-2-10-6-12-12z" fill="${c}"/>
+  <path d="M60 30c18 0 30 14 30 32 0 22-14 36-30 36S30 84 30 62c0-18 12-32 30-32z" fill="${c}"/>
+  <path d="M44 66c0-6 7-10 16-10s16 4 16 10c0 14-7 26-16 26s-16-12-16-26z" fill="#eafaf6"/>
+  <circle cx="50" cy="54" r="7.5" fill="#fff"/><circle cx="70" cy="54" r="7.5" fill="#fff"/>
+  <circle class="eye" cx="50" cy="55" r="4.2" fill="#2c2016"/><circle class="eye" cx="70" cy="55" r="4.2" fill="#2c2016"/>
+  <circle cx="48.5" cy="53.5" r="1.5" fill="#fff"/><circle cx="68.5" cy="53.5" r="1.5" fill="#fff"/>
+  <path d="M50 74q10 8 20 0" stroke="#2c2016" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M62 10c2 3 4 5 4 8a4 4 0 0 1-8 0c0-3 2-5 4-8z" fill="#7fd8ff"/>
+</g></svg>`}
+function rabbit(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="24" ry="5" fill="rgba(0,0,0,.08)"/>
+  <path d="M48 34c-3-16 0-24 4-24s6 8 4 24z" fill="${c}"/>
+  <path d="M72 34c3-16 0-24-4-24s-6 8-4 24z" fill="${c}"/>
+  <path d="M49 30c-2-11 0-16 3-16s4 5 3 16z" fill="#ffd9ec"/>
+  <path d="M71 30c2-11 0-16-3-16s-4 5-3 16z" fill="#ffd9ec"/>
+  <path d="M60 30c17 0 28 13 28 32 0 22-13 36-28 36S32 84 32 62c0-19 11-32 28-32z" fill="${c}"/>
+  <path d="M44 64c0-6 7-10 16-10s16 4 16 10c0 12-7 22-16 22s-16-10-16-22z" fill="#fff7ea"/>
+  <circle cx="50" cy="54" r="7.5" fill="#fff"/><circle cx="70" cy="54" r="7.5" fill="#fff"/>
+  <circle class="eye" cx="50" cy="55" r="4.2" fill="#2c2016"/><circle class="eye" cx="70" cy="55" r="4.2" fill="#2c2016"/>
+  <circle cx="48.5" cy="53.5" r="1.5" fill="#fff"/><circle cx="68.5" cy="53.5" r="1.5" fill="#fff"/>
+  <path d="M57 66h6l-3 4z" fill="#f0509e"/>
+  <rect x="56.4" y="72" width="3.2" height="7" rx="1" fill="#fff" stroke="#2c2016" stroke-width=".8"/>
+  <rect x="60.4" y="72" width="3.2" height="7" rx="1" fill="#fff" stroke="#2c2016" stroke-width=".8"/>
+  <path d="M40 66h-12M40 70h-12M80 66h12M80 70h12" stroke="#2c2016" stroke-width="1.2" opacity=".45"/>
+</g></svg>`}
+function otter(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="26" ry="5" fill="rgba(0,0,0,.08)"/>
+  <circle cx="40" cy="38" r="8" fill="${c}"/><circle cx="80" cy="38" r="8" fill="${c}"/>
+  <path d="M60 30c18 0 29 13 29 33 0 22-13 35-29 35S31 85 31 63c0-20 11-33 29-33z" fill="${c}"/>
+  <ellipse cx="60" cy="70" rx="18" ry="15" fill="#fff2e2"/>
+  <circle cx="50" cy="52" r="7" fill="#fff"/><circle cx="70" cy="52" r="7" fill="#fff"/>
+  <circle class="eye" cx="50" cy="53" r="4" fill="#2c2016"/><circle class="eye" cx="70" cy="53" r="4" fill="#2c2016"/>
+  <circle cx="48.5" cy="51.5" r="1.5" fill="#fff"/><circle cx="68.5" cy="51.5" r="1.5" fill="#fff"/>
+  <ellipse cx="60" cy="64" rx="5" ry="3.6" fill="#2c2016"/>
+  <path d="M60 68v5M60 73c-3 0-5-1-6-3M60 73c3 0 5-1 6-3" stroke="#2c2016" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M42 66h-12M44 71h-12M78 66h12M76 71h12" stroke="#8a6a4a" stroke-width="1.2" opacity=".55"/>
+  <rect x="57" y="73" width="6" height="4" rx="1" fill="#fff" stroke="#2c2016" stroke-width=".8"/>
+</g></svg>`}
+function tiger(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="26" ry="5" fill="rgba(0,0,0,.08)"/>
+  <circle cx="38" cy="36" r="10" fill="${c}"/><circle cx="82" cy="36" r="10" fill="${c}"/>
+  <circle cx="38" cy="37" r="5" fill="#fff7ea"/><circle cx="82" cy="37" r="5" fill="#fff7ea"/>
+  <path d="M60 28c19 0 30 14 30 34 0 23-13 37-30 37S30 85 30 62c0-20 11-34 30-34z" fill="${c}"/>
+  <path d="M60 30v-6M50 32l-3-7M70 32l3-7M36 54h-8M36 62h-8M84 54h8M84 62h8" stroke="rgba(0,0,0,.28)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M44 66c0-6 7-10 16-10s16 4 16 10c0 12-7 22-16 22s-16-10-16-22z" fill="#fff7ea"/>
+  <circle cx="50" cy="54" r="7.5" fill="#fff"/><circle cx="70" cy="54" r="7.5" fill="#fff"/>
+  <circle class="eye" cx="50" cy="55" r="4.2" fill="#2c2016"/><circle class="eye" cx="70" cy="55" r="4.2" fill="#2c2016"/>
+  <circle cx="48.5" cy="53.5" r="1.5" fill="#fff"/><circle cx="68.5" cy="53.5" r="1.5" fill="#fff"/>
+  <path d="M56 66h8l-4 4z" fill="#2c2016"/>
+  <path d="M60 70v4M60 74c-4 0-7-2-8-4M60 74c4 0 7-2 8-4" stroke="#2c2016" stroke-width="2" fill="none" stroke-linecap="round"/>
+</g></svg>`}
+function pup(c){return `<svg class="char" viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><g class="float">
+  <ellipse cx="60" cy="112" rx="26" ry="5" fill="rgba(0,0,0,.08)"/>
+  <path d="M30 44c-10 2-16 14-12 30 8 2 16-6 18-16z" fill="${c}"/>
+  <path d="M90 44c10 2 16 14 12 30-8 2-16-6-18-16z" fill="${c}"/>
+  <path d="M60 30c18 0 30 14 30 34 0 24-14 38-30 38S30 88 30 64c0-20 12-34 30-34z" fill="${c}"/>
+  <path d="M44 66c0-6 7-11 16-11s16 5 16 11c0 12-7 22-16 22s-16-10-16-22z" fill="#fff7ea"/>
+  <circle cx="50" cy="54" r="8" fill="#fff"/><circle cx="70" cy="54" r="8" fill="#fff"/>
+  <circle class="eye" cx="50" cy="55" r="4.4" fill="#2c2016"/><circle class="eye" cx="70" cy="55" r="4.4" fill="#2c2016"/>
+  <circle cx="48.5" cy="53.5" r="1.6" fill="#fff"/><circle cx="68.5" cy="53.5" r="1.6" fill="#fff"/>
+  <ellipse cx="60" cy="68" rx="5" ry="4" fill="#2c2016"/>
+  <path d="M60 72v6M60 78c-4 0-7-2-8-5M60 78c4 0 7-2 8-5" stroke="#2c2016" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M56 80h8v5c0 2-2 4-4 4s-4-2-4-4z" fill="#f0509e"/>
+</g></svg>`}
+
+/* ---------- DATA (6 chapters · 24 questions) ---------- */
+const TOPICS=[
+  {key:"placevalue",chapter:"A",name:"Hootie the Owl",role:"Place Value to Thousandths",
+   color:"var(--A)",hex:"#8b5cf6",svg:owl,teks:["5.2A","5.7A"],
+   lesson:"Every place is <b>10 times bigger</b> than the place to its right — and <b>10 times smaller</b> than the place to its left. Going right: ones → tenths → hundredths → thousandths. A digit's <b>value</b> is the digit times its place. Example: in <b>4.276</b>, the 2 is worth 2 tenths (0.2), the 7 is worth 7 hundredths (0.07), and the 6 is worth 6 thousandths (0.006).",
+   hint:"Ask: which place is that digit sitting in — tenths, hundredths, or thousandths?",
+   questions:[
+     {q:"In <b>4.276</b>, what is the <b>value</b> of the digit 7?",
+      choices:["7","0.7","0.07","0.007"],answer:2,
+      why:"The 7 is in the hundredths place, so its value is 7 hundredths = 0.07."},
+     {q:"When you move one place to the <b>right</b> on the place value chart, a digit becomes…",
+      choices:["10 times bigger","10 times smaller","the same","100 times bigger"],answer:1,
+      why:"Each place to the right is 10 times smaller (one-tenth the size). Tenths → hundredths → thousandths."},
+     {q:"In <b>3.408</b>, what is the <b>value</b> of the digit 8?",
+      choices:["8","0.8","0.08","0.008"],answer:3,
+      why:"The 8 is in the thousandths place, so its value is 8 thousandths = 0.008."},
+     {q:"Using place value: 1 meter = 100 centimeters. So <b>4 meters</b> = how many cm?",
+      choices:["40 cm","400 cm","4,000 cm","14 cm"],answer:1,
+      why:"Each meter is 100 cm, so 4 × 100 = 400 cm. Multiplying by 100 shifts each digit two places to the left."}
+   ]},
+  {key:"namecompare",chapter:"B",name:"Splash the Dolphin",role:"Name & Compare Decimals",
+   color:"var(--B)",hex:"#2f6bff",svg:dolphin,teks:["5.2A","5.2B"],
+   lesson:"To <b>name</b> a decimal, read the digits like a whole number, then say the last digit's place. 0.45 = “forty-five <b>hundredths</b>.” To <b>compare</b>, line up the decimal points and check place by place from the <b>left</b>. Careful: a longer decimal is NOT always bigger — 0.7 is greater than 0.68!",
+   hint:"Line up the decimal points and compare the tenths first, then hundredths.",
+   questions:[
+     {q:"How do you say <b>0.45</b> in words?",
+      choices:["four point five","forty-five","forty-five hundredths","forty-five tenths"],answer:2,
+      why:"The last digit (5) is in the hundredths place, so it's forty-five hundredths."},
+     {q:"Which is <b>greater</b>: 0.7 or 0.68?",
+      choices:["0.68","0.7","They are equal","You can't tell"],answer:1,
+      why:"Line them up: 0.70 vs 0.68. Compare tenths: 7 tenths beats 6 tenths, so 0.7 is greater — even though it looks shorter!"},
+     {q:"Which sign makes this true? <b>0.5 ___ 0.50</b>",
+      choices:["<","=",">","none"],answer:1,
+      why:"A zero on the END of a decimal doesn't change its value. 0.5 and 0.50 are exactly equal."},
+     {q:"Which shows <b>0.34</b> in expanded form?",
+      choices:["0.3 + 0.04","0.03 + 0.4","3 + 4","0.3 + 0.4"],answer:0,
+      why:"The 3 is 3 tenths (0.3) and the 4 is 4 hundredths (0.04). Added together: 0.3 + 0.04."}
+   ]},
+  {key:"rounding",chapter:"C",name:"Hopper the Rabbit",role:"Rounding Decimals",
+   color:"var(--C)",hex:"#12a58a",svg:rabbit,teks:["5.2C"],
+   lesson:"To round, look at the digit <b>just to the right</b> of the place you're rounding to. If it's <b>5 or more</b>, round up. If it's <b>4 or less</b>, keep the digit the same. Example: round 3.7 to the nearest whole — the tenths digit is 7 (that's 5 or more) → round up to <b>4</b>.",
+   hint:"Peek at the digit to the RIGHT: 5 or more rounds up, 4 or less stays.",
+   questions:[
+     {q:"Round <b>3.7</b> to the nearest <b>whole number</b>.",
+      choices:["3","4","30","3.7"],answer:1,
+      why:"The tenths digit is 7, which is 5 or more, so round up: 3.7 → 4."},
+     {q:"Round <b>2.34</b> to the nearest <b>tenth</b>.",
+      choices:["2.3","2.4","2","3"],answer:0,
+      why:"Look at the hundredths digit (4). It's 4 or less, so the tenths digit stays: 2.34 → 2.3."},
+     {q:"Round <b>6.58</b> to the nearest <b>tenth</b>.",
+      choices:["6.5","6.6","7","6"],answer:1,
+      why:"The hundredths digit is 8 (5 or more), so round the tenths up: 6.58 → 6.6."},
+     {q:"Round <b>4.5</b> to the nearest <b>whole number</b>.",
+      choices:["4","5","4.5","45"],answer:1,
+      why:"When the digit is exactly 5, we round up: 4.5 → 5."}
+   ]},
+  {key:"addsub",chapter:"D",name:"Ripple the Otter",role:"Add & Subtract Decimals",
+   color:"var(--D)",hex:"#ff9e2c",svg:otter,teks:["5.3K","5.2A"],
+   lesson:"The golden rule: <b>line up the decimal points</b>, then add or subtract just like whole numbers. If one number is shorter, fill the empty spots with <b>zeros</b>. Then bring the decimal point <b>straight down</b> into the answer. Example: 3.75 + 1.5 → write it as 3.75 + 1.50 = 5.25.",
+   hint:"Stack the numbers so the decimal points line up, then add/subtract column by column.",
+   questions:[
+     {q:"What is <b>0.5 + 0.3</b>?",
+      choices:["0.8","8","0.08","0.53"],answer:0,
+      why:"5 tenths + 3 tenths = 8 tenths = 0.8."},
+     {q:"What is <b>1.4 + 2.3</b>?",
+      choices:["3.7","37","3.07","0.37"],answer:0,
+      why:"Line up the points: 1.4 + 2.3. Tenths: 4+3=7. Ones: 1+2=3. Answer: 3.7."},
+     {q:"What is <b>0.9 − 0.4</b>?",
+      choices:["0.5","5","0.05","1.3"],answer:0,
+      why:"9 tenths − 4 tenths = 5 tenths = 0.5."},
+     {q:"What is <b>3.75 + 1.5</b>?",
+      choices:["5.25","3.90","5.20","52.5"],answer:0,
+      why:"Fill in a zero: 3.75 + 1.50. Add each column and bring the point down → 5.25."}
+   ]},
+  {key:"multiply",chapter:"E",name:"Stripes the Tiger",role:"Multiply Decimals",here:true,
+   color:"var(--E)",hex:"#f0509e",svg:tiger,teks:["5.3A","5.3D","5.3E"],
+   lesson:"Multiply the digits like whole numbers, then figure out where the decimal point goes. The secret is to <b>estimate first</b>: round the decimal to a whole number and multiply — that tells you about how big the answer should be. Then place the point so your answer is close to the estimate. Example: 3.14 × 7 → round to 3 × 7 = about 21 → answer is <b>21.98</b>.",
+   hint:"Estimate first! Round the decimal, multiply, then put the point where the answer is near your estimate.",
+   questions:[
+     {q:"<b>Estimate</b> 4.2 × 3 by rounding 4.2. About how big is the answer?",
+      choices:["about 9","about 12","about 15","about 42"],answer:1,
+      why:"4.2 rounds to 4, and 4 × 3 = 12. So the real answer is close to 12 (it's exactly 12.6)."},
+     {q:"What is <b>5.1 × 2</b>?",
+      choices:["1.02","10.2","102","1020"],answer:1,
+      why:"51 × 2 = 102. There's one digit after the decimal in 5.1, so the answer has one too: 10.2."},
+     {q:"For <b>3.14 × 7</b>, the estimate is about 21. Which is the correct product?",
+      choices:["2.198","21.98","219.8","2198"],answer:1,
+      why:"The estimate 21 tells you the answer is near 21 — so the point goes to make 21.98."},
+     {q:"One pencil costs <b>$0.45</b>. How much do <b>3</b> pencils cost?",
+      choices:["$1.35","$13.50","$0.135","$135"],answer:0,
+      why:"3 × 45 = 135, and $0.45 has two decimal places, so it's $1.35. Estimate 3 × $0.50 ≈ $1.50 — close!"}
+   ]},
+  {key:"divide",chapter:"F",name:"Scout the Pup",role:"Divide Decimals & Word Problems",
+   color:"var(--F)",hex:"#2fae66",svg:pup,teks:["5.3F","5.3G","5.3K"],
+   lesson:"Dividing means splitting into <b>equal groups</b>. Keep the decimal point in your answer <b>lined up</b> right above the point in the number you're dividing. Estimate to check! For word problems, decide whether to multiply or divide, solve, then ask: “Does my answer make sense?” Example: 4.8 ÷ 2 = 2.4 (and 2 × 2.4 = 4.8 checks it).",
+   hint:"Line the point up in the answer, then divide like normal. Check by estimating.",
+   questions:[
+     {q:"What is <b>0.6 ÷ 3</b>?",
+      choices:["0.2","2","0.02","20"],answer:0,
+      why:"6 tenths split into 3 equal groups = 2 tenths each = 0.2. Check: 3 × 0.2 = 0.6."},
+     {q:"What is <b>4.8 ÷ 2</b>?",
+      choices:["2.4","24","0.24","2.04"],answer:0,
+      why:"48 ÷ 2 = 24, and keeping the point lined up gives 2.4. Check: 2 × 2.4 = 4.8."},
+     {q:"<b>$6.50</b> is shared equally among <b>5</b> friends. How much does each get?",
+      choices:["$1.30","$13.00","$0.13","$1.03"],answer:0,
+      why:"6.50 ÷ 5 = 1.30, so each friend gets $1.30. Check: 5 × $1.30 = $6.50."},
+     {q:"A ribbon <b>3.6 m</b> long is cut into <b>4</b> equal pieces. How long is each piece?",
+      choices:["0.9 m","9 m","0.09 m","14.4 m"],answer:0,
+      why:"3.6 ÷ 4 = 0.9 m. Estimate: about 4 ÷ 4 = 1, so 0.9 makes sense. (14.4 would be multiplying by mistake!)"}
+   ]}
+];
+
+/* ---------- STATE (saved in the browser) ---------- */
+const SKEY="mwisd_m1_master_v1";
+let state={}; TOPICS.forEach(t=>state[t.key]=new Set());
+try{
+  const saved=JSON.parse(localStorage.getItem(SKEY)||"{}");
+  TOPICS.forEach(t=>{ if(Array.isArray(saved[t.key])) saved[t.key].forEach(i=>state[t.key].add(i)); });
+}catch(e){}
+function save(){
+  try{
+    const obj={}; TOPICS.forEach(t=>obj[t.key]=[...state[t.key]]);
+    localStorage.setItem(SKEY,JSON.stringify(obj));
+  }catch(e){}
+}
+const totalAll=TOPICS.reduce((n,t)=>n+t.questions.length,0);
+document.getElementById("totalAll").textContent=totalAll;
+document.querySelector(".ovring .num span").textContent="of "+totalAll;
+let celebratedAll=false;
+
+/* ---------- RINGS ---------- */
+const ringsEl=document.getElementById("rings");
+TOPICS.forEach(t=>{
+  const d=document.createElement("button");
+  d.className="ring";d.dataset.key=t.key;d.setAttribute("aria-label",t.role+" progress");
+  d.innerHTML=`<svg viewBox="0 0 50 50"><circle class="track" cx="25" cy="25" r="20"/>
+    <circle class="prog" data-ring="${t.key}" cx="25" cy="25" r="20" stroke="${t.hex}"/></svg>
+    <div class="rlabel" style="color:${t.hex}">${t.chapter} · ${t.role}</div>
+    <div class="rpct" data-pct="${t.key}">0/${t.questions.length}</div>`;
+  d.onclick=()=>openQuiz(t.key);
+  ringsEl.appendChild(d);
+});
+
+/* ---------- GRID ---------- */
+const gridEl=document.getElementById("grid");
+TOPICS.forEach(t=>{
+  const c=document.createElement("button");
+  c.className="guide";c.style.setProperty("--c",t.color);c.dataset.key=t.key;
+  c.setAttribute("aria-label",`${t.name}, guide for Chapter ${t.chapter}: ${t.role}`);
+  const teks=t.teks.map(k=>`<span class="teks">TEKS ${k}</span>`).join("");
+  c.innerHTML=`<span class="mastered-badge">★ Mastered!</span>
+    ${t.here?'<span class="here-flag">📍 Adam is here</span>':''}
+    ${t.svg(t.hex)}
+    <div><span class="chaptag">Chapter ${t.chapter}</span></div>
+    <div class="gname">${t.name}</div><div class="grole">${t.role}</div>
+    <div class="gteks">${teks}</div>
+    <div class="gmeta" data-meta="${t.key}">0 / ${t.questions.length} correct</div>
+    <span class="gcta">Start quiz →</span>`;
+  c.onclick=()=>openQuiz(t.key);
+  gridEl.appendChild(c);
+});
+
+/* ---------- QUIZ ---------- */
+const overlay=document.getElementById("quizOverlay");
+const head=document.getElementById("quizHead");
+const body=document.getElementById("quizBody");
+const foot=document.getElementById("quizFoot");
+let curKey=null,qIndex=0;
+
+function openQuiz(key){curKey=key;qIndex=0;
+  overlay.classList.add("open");overlay.setAttribute("aria-hidden","false");renderQuiz();}
+function closeQuiz(){overlay.classList.remove("open");overlay.setAttribute("aria-hidden","true");curKey=null;}
+
+function renderQuiz(){
+  const t=TOPICS.find(x=>x.key===curKey), q=t.questions[qIndex];
+  document.querySelector(".quiz-modal").style.setProperty("--c",t.color);
+  head.innerHTML=`${t.svg(t.hex)}<div class="qh-txt"><div class="qh-eyebrow">Chapter ${t.chapter} · ${t.role}</div>
+    <div class="qh-title" id="qhTitle">Question ${qIndex+1} of ${t.questions.length}</div></div>
+    <button class="quiz-x" aria-label="Close quiz">✕</button>`;
+  head.querySelector(".quiz-x").onclick=closeQuiz;
+  const dots=t.questions.map((_,i)=>`<span class="qdot${state[curKey].has(i)?' got':''}${i===qIndex?' now':''}"></span>`).join("");
+  body.innerHTML=`${qIndex===0?`<div class="lesson"><b>💡 Tip from ${t.name}:</b> ${t.lesson}</div>`:``}
+    <div class="qdots">${dots}</div>
+    <div class="question">${q.q}</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback" hidden></div>`;
+  const choicesEl=body.querySelector("#choices");
+  q.choices.forEach((c,i)=>{
+    const b=document.createElement("button");
+    b.className="choice";b.innerHTML=c;b.onclick=()=>choose(i,b);
+    choicesEl.appendChild(b);
+  });
+  foot.innerHTML="";
+  body.scrollTop=0;
+}
+
+function choose(i,btn){
+  const t=TOPICS.find(x=>x.key===curKey), q=t.questions[qIndex];
+  if(btn.disabled)return;
+  const fb=body.querySelector("#feedback");
+  if(i===q.answer){
+    btn.classList.add("correct");
+    body.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+    fb.hidden=false;fb.className="feedback correct";
+    fb.innerHTML=`<b>🎉 Correct!</b> ${q.why}`;
+    state[curKey].add(qIndex);
+    save();
+    updateProgress();
+    celebrate(t.hex,false);
+    const last=qIndex===t.questions.length-1;
+    foot.innerHTML=`<button class="next-btn" id="nextBtn">${last?"See my results 🏆":"Next question →"}</button>`;
+    foot.querySelector("#nextBtn").onclick=()=>{ if(last){showSummary();} else {qIndex++;renderQuiz();} };
+  }else{
+    btn.classList.add("wrong");btn.disabled=true;
+    fb.hidden=false;fb.className="feedback wrong";
+    fb.innerHTML=`<b>Not quite — try again!</b> ${t.hint} You've got this. 💪`;
+  }
+}
+
+function showSummary(){
+  const t=TOPICS.find(x=>x.key===curKey);
+  const got=state[curKey].size, all=t.questions.length;
+  const idx=TOPICS.indexOf(t), next=TOPICS[idx+1];
+  head.innerHTML=`${t.svg(t.hex)}<div class="qh-txt"><div class="qh-eyebrow">Chapter ${t.chapter} · ${t.role}</div>
+    <div class="qh-title">All done!</div></div><button class="quiz-x" aria-label="Close quiz">✕</button>`;
+  head.querySelector(".quiz-x").onclick=closeQuiz;
+  body.innerHTML=`<div class="summary">
+    <div class="sum-emoji">🏆</div>
+    <h2>Chapter ${t.chapter}: Mastered!</h2>
+    <p>You earned <b>${got} of ${all}</b> stars with ${t.name} — <b>${t.role}</b>. Awesome work, Adam!</p>
+    <div class="sum-stars">${"⭐".repeat(got)}</div>
+  </div>`;
+  foot.innerHTML=`<button class="next-btn ghost" id="againBtn">↺ Play again</button>
+    ${next?`<button class="next-btn" id="nextBtn">Next: Chapter ${next.chapter} →</button>`
+          :`<button class="next-btn" id="doneBtn">✓ Back to dashboard</button>`}`;
+  const a=foot.querySelector("#againBtn"); if(a)a.onclick=()=>{qIndex=0;renderQuiz();};
+  const n=foot.querySelector("#nextBtn"); if(n)n.onclick=()=>openQuiz(next.key);
+  const d=foot.querySelector("#doneBtn"); if(d)d.onclick=closeQuiz;
+  celebrate(t.hex,true);
+}
+
+overlay.onclick=e=>{if(e.target===overlay)closeQuiz();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&overlay.classList.contains("open"))closeQuiz();});
+
+/* ---------- PROGRESS ---------- */
+function updateProgress(){
+  let total=0;
+  TOPICS.forEach(t=>{
+    const got=state[t.key].size, all=t.questions.length; total+=got;
+    document.querySelector(`[data-ring="${t.key}"]`).style.strokeDashoffset=126-(126*(got/all));
+    document.querySelector(`[data-pct="${t.key}"]`).textContent=`${got}/${all}`;
+    document.querySelector(`[data-meta="${t.key}"]`).textContent=`${got} / ${all} correct`;
+    document.querySelector(`.guide[data-key="${t.key}"]`).classList.toggle("done",got===all);
+  });
+  document.getElementById("totalGot").textContent=total;
+  document.getElementById("ovNum").textContent=total;
+  document.getElementById("ovProg").style.strokeDashoffset=283-(283*total/totalAll);
+
+  // plain-language readout
+  const pct=Math.round(total/totalAll*100);
+  const chaptersDone=TOPICS.filter(t=>state[t.key].size===t.questions.length).length;
+  const r=document.getElementById("readout");
+  if(total===0){
+    r.innerHTML=`No stars yet — let's start! Adam is currently learning <b>Chapter E (Multiply Decimals)</b> in class. Tap any guide below to read the tip and answer a few questions. Every correct answer fills a ring.`;
+  }else if(total===totalAll){
+    r.innerHTML=`🏆 All <b>${totalAll} questions</b> correct across all 6 chapters — Module 1 mastered! Adam is a Place Value &amp; Decimals champion.`;
+  }else{
+    const trend = pct<34 ? "just getting started 🌱" : pct<67 ? "good momentum 🚀" : "almost there 🏁";
+    r.innerHTML=`<b>${total} of ${totalAll}</b> stars — that's <b>${pct}%</b>, ${trend} Chapters fully mastered: <b>${chaptersDone} of 6</b>. Keep filling those rings!`;
+  }
+
+  if(total===totalAll&&!celebratedAll){celebratedAll=true;celebrate("#ffd34d",true);}
+  if(total<totalAll)celebratedAll=false;
+}
+
+/* ---------- CONFETTI ---------- */
+function celebrate(color,big){
+  if(window.matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const wrap=document.getElementById("confetti");
+  const colors=[color,"#ffd34d","#f0509e","#12a58a","#2f6bff","#ff9e2c","#8b5cf6","#2fae66"];
+  const n=big?90:34;
+  for(let k=0;k<n;k++){
+    const s=document.createElement("i");
+    s.style.left=Math.random()*100+"%";
+    s.style.background=colors[k%colors.length];
+    s.style.animationDuration=(1.6+Math.random()*1.6)+"s";
+    s.style.animationDelay=(Math.random()*.4)+"s";
+    s.style.transform=`translateY(0) rotate(${Math.random()*360}deg)`;
+    wrap.appendChild(s);
+    setTimeout(()=>s.remove(),3600);
+  }
+}
+
+/* ---------- RESET ---------- */
+document.getElementById("reset").onclick=()=>{
+  TOPICS.forEach(t=>state[t.key].clear());
+  celebratedAll=false;save();updateProgress();closeQuiz();
+};
+
+updateProgress();
+</script>
+</body>
+</html>
